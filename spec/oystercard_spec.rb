@@ -1,7 +1,11 @@
 require 'oystercard'
 
 describe Oystercard do
-  let(:station){ double :station }
+  let(:entry_station){ double :station }
+  let(:exit_station){ double :station }
+  let(:journey) { { entry_station: entry_station, exit_station: exit_station } }
+
+
   it 'stores the entry station' do
     subject.top_up(1)
     subject.touch_in(station)
@@ -40,25 +44,60 @@ describe Oystercard do
     it 'reduce card amount by min_charge' do
       subject.top_up(5)
       subject.touch_in(station)
-      expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MIN_CHARGE)
+      expect{ subject.touch_out(5) }.to change{ subject.balance }.by(-Oystercard::MIN_CHARGE)
     end
-
   describe '#in_journey' do
   it 'returns true if in journey' do
     allow(subject).to receive(:entry_station).and_return(true)
     expect(subject.in_journey?).to eq(true)
   end
 
+  it 'has an empty list of journeys by default' do
+    expect(subject.journeys).to be_empty
+  end
+
   it 'returns false if not in journey' do
     allow(subject).to receive(:entry_station).and_return(false)
     expect(subject.in_journey?).to eq(false)
   end
+end
 
   describe '#touch_out' do
+    let(:entry_station) { double :station }
+    let(:exit_station) { double :station }
+    let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
+
+    it 'stores a journey' do
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.journeys).to include journey
+  end
+end
   it 'reduces by minimum amount' do
     expect {subject.touch_out}.to change { subject.balance }.by -1
 end
-end
+    it 'stores exit_station' do
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.exit_station).to eq exit_station
+    end
+
+  describe '#journey_history' do
+    it 'has a empty history by default' do
+      expect(subject.journeys).to be_empty
+    end
+    it 'has an entry_station' do
+      subject.top_up(1)
+      subject.touch_in(entry_station)
+      subject.touch_out(2, exit_station)
+      expect(subject.journeys[0][:Exit_station].to eq(exit_station))
+    end
+    it 'stores entry & exit station in one journey' do
+      subject.top_up(1)
+      subject.touch_in(entry_station)
+      subject.touch_out(2, exit_station)
+      expect(subject.journeys[0]).to include(:Entry_station, :Exit_station)
+    end
 end
 end
 end
