@@ -1,73 +1,56 @@
+
 class Oystercard
-  MAXIMUN = 90
-  MINIMUM = 1
-  MIN_CHARGE = 1
-  ERROR = {
-    max: 'Maximun allowance reached'.freeze,
-    min: 'raise_error if below min amount'
-   }
-  attr_reader :balance, :entry_station, :journey_history, :entry_station, :exit_station
+  attr_reader :balance, :entry_station, :exit_station, :journey_history
+  MAX_BALANCE = 90
+  MIN_BALANCE = 1
+  ERROR = { max: "Max balance £#{MAX_BALANCE} will be exceeded",
+  min: "Cannot begin journey: insufficient funds"
+  }
 
-  @journeys = [ ]
+  def initialize
+    @in_use = false
+    @balance = 0
+    @entry_station = nil
+    @exit_station = nil
+    @journey_history = []
+  end
 
-    def initialize
-      @balance = 0
-      @entry_station = nil
-      @exit_station = nil
-      @journey_history = []
-    end
+  def top_up(value)
+    fail ERROR[:max] if max_reached?(value)
 
-    def top_up amount
-      fail ERROR[:max] if @balance >= MAXIMUN
+    @balance += value
+  end
 
-      @balance += amount
-    end
+  def touch_in(entry_station)
+    fail ERROR[:min] if @balance < MIN_BALANCE
 
-    def touch_in station
-      fail ERROR[:min] if @balance < MINIMUM
+    @entry_station = entry_station
+  end
 
-      @entry_station = entry_station
+  def touch_out(exit_station)
+    deduct(1)
+    @exit_station = exit_station
+    update_journey_history
+  end
 
+  def in_journey?
+    !@entry_station != true
+  end
 
-#this was failing due to not having a amount
-#to succcssfully test top_up(1)
+  def update_journey_history
+    journey = { entry_station: @entry_station, exit_station: @exit_station }
+    @journey_history << journey
+    @entry_station = nil
+    @exit_station = nil
+  end
 
-    end
+  private
 
-    def touch_out(exit_station)
-      reduce(MIN_CHARGE)
+  def max_reached?(value)
+    @balance + value > MAX_BALANCE
+  end
 
-      @exit_station = exit_station
-
-      update_journey_history
-    end
-
-    def total_balance
-      "You have a total balance of £#{@balance}"
-    end
-
-    def in_journey?
-      !entry_station !=true
-    end
-
-    def update_journey_history()
-      journey = {
-        Entry_station: @entry_station,
-        Exit_station: @exit_station
-      }
-      @journey_history << journey
-      @entry_station = nil
-      @exit_station = nil 
-    end
-
-    def num
-      i = @journeys.count + 1
-      journey + i
-    end
-
-private
-    def reduce amount
-      @balance -= amount
-    end
-
+  def deduct(value)
+    @balance -= value
+  end
 end
