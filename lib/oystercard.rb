@@ -23,7 +23,7 @@ class Oystercard
   def touch_in(entry_station)
     complete_journey unless @journey_log.entry_station.nil?
     min_error?
-    @journey_log.start(entry_station)
+    @journeys.start(entry_station)
   end
 
   def touch_out(exit_station)

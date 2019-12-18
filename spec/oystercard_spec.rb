@@ -32,7 +32,7 @@ describe Oystercard do
     # end
 
     it 'should raise an error if attempting to touch when balance too low' do
-      expect { subject.touch_in(:entry_station) }.to raise_error Oystercard::ERROR[:min]
+      expect { subject.touch_in(station) }.to raise_error Oystercard::ERROR[:min]
     end
 
     # it 'should store the entry station when touching in' do
@@ -48,11 +48,11 @@ describe Oystercard do
   #     expect(subject.in_journey?).to eq false
   #   end
 
-    it 'should deduct the fare when touching out' do
-      subject.top_up(5)
-      subject.touch_in(:entry_station)
-      expect { subject.touch_out(:exit_station) }.to change { subject.balance }.by(-3)
-    end
+    #***** it 'should deduct the fare when touching out' do
+    #   subject.top_up(5)
+    #   subject.touch_in(:entry_station)
+    #   expect { subject.touch_out(:exit_station) }.to change { subject.balance }.by(-3)
+    # end
 
     # it 'should forget the entry station on touch out' do
     #   subject.top_up(5)
@@ -60,13 +60,13 @@ describe Oystercard do
     #   subject.touch_out(:station)
     #   expect(subject.entry_station).to eq nil
     # end
-
-    it 'should add the journey to journey history' do
-      travel = Journey.new
-      card = Oystercard.new(travel)
-      card.top_up(5)
-      card.touch_in(:entry_station)
-      card.touch_out(:exit_station)
-      expect(card.journey_history).to include(travel)
-    end
+    #
+    # it 'should add the journey to journey history' do
+    #   travel = Journey.new
+    #   card = Oystercard.new(travel)
+    #   card.top_up(5)
+    #   card.touch_in(:entry_station)
+    #   card.touch_out(:exit_station)
+    #   expect(card.journey_history).to include(travel)
+    # end
   end
