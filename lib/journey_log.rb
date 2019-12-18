@@ -4,7 +4,7 @@ attr_reader :journey_class
 
   def initialize(journey_class = Journey.new)
     @journey_class = journey_class
-    @journey_history = []
+    @journeys = []
   end
 
   def start(entry_station)
@@ -16,5 +16,19 @@ attr_reader :journey_class
   end
 
   def current_journey
+    @journeys << @journey_class
+    if @journey_class.entry_station.nil? ||
+      @journey_class.exit_station.nil?
+    else
+      @journey_class = Journey.new
   end
+
+  def journeys
+    @journeys.dup
+#     dup() public
+# Produces a shallow copy of obj—the instance variables
+# of obj are copied, but not the objects they reference.
+# dup copies the tainted state of obj.
+  end
+end
 end

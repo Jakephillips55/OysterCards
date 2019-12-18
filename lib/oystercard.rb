@@ -1,18 +1,18 @@
 require_relative 'journey'
+
 require_relative 'station'
 
 class Oystercard
-  attr_reader :balance, :journey_history, :journey
+  attr_reader :balance, :journey_log
   MAX_BALANCE = 90
   MIN_BALANCE = 1
   ERROR = { max: "Cannot go over £#{MAX_BALANCE}, card is full",
   min: "Cannot begin journey, not enough on card"
   }
 
-  def initialize(journey = Journey.new)
+  def initialize(journey_log = JourneyLog.new)
     @balance = 0
-    @journey = journey
-    @journey_history = []
+    @journey_log = journey_log
   end
 
   def top_up(value)
@@ -21,18 +21,18 @@ class Oystercard
   end
 
   def touch_in(entry_station)
-    complete_journey unless @journey.entry_station.nil?
+    complete_journey unless @journey_log.entry_station.nil?
     min_error?
-    @journey.update_entry_station(entry_station)
+    @journey_log.start(entry_station)
   end
 
   def touch_out(exit_station)
-    @journey.update_exit_station(exit_station)
+    @journey_log.finish(exit_station)
     complete_journey
   end
 
   def in_journey?
-    !@entry_station != true
+    @entry_station != true
   end
 
 
@@ -54,8 +54,7 @@ class Oystercard
   end
 
   def complete_journey
-    deduct(@journey.fare)
-    update_journey_history
+    deduct(@journey_log.current_journey.fare)
   end
 
   def deduct(value)
