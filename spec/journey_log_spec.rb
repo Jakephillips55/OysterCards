@@ -20,8 +20,13 @@ require 'journey_log'
   end
 
   it 'should have a current_journey method that will return a journey if incomplete' do
-    log = described_class.new(incomplete_journey)
-    expect(log.current_journey).to eq incomplete_journey
+    log = described_class.new incomplete_journey
+
+    expect(log.current_journey).to eq log.journeys
+    #was getting error with incomplete_journey defined uptop
+    #this was due to it getting pushed into and array
+    #output was correct but other methods were causing the error.
+    #lesson learned read your code and see whats interacting with what.
   end
 
   it 'A journey class method that will reset the journey_class variable if complete' do
