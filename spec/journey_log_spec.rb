@@ -13,7 +13,7 @@ require 'journey_log'
     log.start(station1)
   end
 
-  it 'should be able to update entry station when a journey is started' do
+  it 'should be able to update exit station when a journey is ended' do
     log = described_class.new(new_journey)
     expect(new_journey).to receive :update_exit_station
     log.finish(station2)
@@ -24,7 +24,7 @@ require 'journey_log'
     expect(log.current_journey).to eq incomplete_journey
   end
 
-  it 'should have a journey class method that will reset the journey_class variable if complete' do
+  it 'A journey class method that will reset the journey_class variable if complete' do
     # how to test this with a double??
   end
 
@@ -33,4 +33,4 @@ require 'journey_log'
     log.current_journey
     expect(log.journeys).to include(new_journey)
 end
-end 
+end

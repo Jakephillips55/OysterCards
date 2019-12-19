@@ -26,15 +26,15 @@ describe Journey do
   it 'should charge MIN_FARE' do
     subject.update_entry_station(station1)
     subject.update_exit_station(station2)
-    expect(subject.fare).to eq Journey::MIN_FARE
+    expect(subject.fare).to eq Journey::MIN_CHARGE
   end
 
   it 'charges PENALTY_FARE if user Journey !complete' do
     subject.update_exit_station(station1)
-    expect(subject.fare).to eq Journey::PENALTY_FARE
+    expect(subject.fare).to eq Journey::PENALTY_CHARGE
   end
   it 'charges PENALTY_FARE if user Journey !complete' do
     subject.update_entry_station(station2)
-    expect(subject.fare).to eq Journey::PENALTY_FARE
-  end 
+    expect(subject.fare).to eq Journey::PENALTY_CHARGE
+  end
 end

@@ -1,6 +1,6 @@
 class JourneyLog
 
-attr_reader :journey_class, :journeys
+attr_reader :journey_class, :journeys, :entry_station, :exit_station
 
   def initialize(journey_class = Journey.new)
     @journey_class = journey_class
@@ -16,11 +16,13 @@ attr_reader :journey_class, :journeys
   end
 
   def current_journey
-    @journeys << @journey_class
     if @journey_class.entry_station.nil? ||
       @journey_class.exit_station.nil?
+
+      @journeys << @journey_class
     else
       @journey_class = Journey.new
+    end
   end
 
   def journeys
@@ -30,5 +32,4 @@ attr_reader :journey_class, :journeys
 # of obj are copied, but not the objects they reference.
 # dup copies the tainted state of obj.
   end
-end
 end

@@ -32,7 +32,7 @@ describe Oystercard do
     # end
 
     it 'should raise an error if attempting to touch when balance too low' do
-      expect { subject.touch_in(station) }.to raise_error Oystercard::ERROR[:min]
+      expect { subject.touch_in(entry_station) }.to raise_error Oystercard::ERROR[:min]
     end
 
     # it 'should store the entry station when touching in' do
