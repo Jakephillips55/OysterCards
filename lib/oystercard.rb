@@ -1,5 +1,5 @@
 require_relative 'journey'
-
+require_relative 'journey_log'
 require_relative 'station'
 
 class Oystercard
@@ -21,7 +21,7 @@ class Oystercard
   end
 
   def touch_in(entry_station)
-    complete_journey unless @journey_log.entry_station.nil?
+    # complete_journey unless @journey_log(entry_station).nil?
 
     min_error?
 
@@ -29,8 +29,9 @@ class Oystercard
   end
 
   def touch_out(exit_station)
-    @journey_log.finish(exit_station)
-    complete_journey
+  deduct(@journey_log.finish(exit_station))
+    # complete_journey
+    @journey_log.reset_journey
   end
 
   def in_journey?
@@ -56,7 +57,7 @@ class Oystercard
   end
 
   def complete_journey
-    deduct(@journey_log.current_journey.fare)
+     deduct(@journey_log.journey_class.fare)
   end
 
   def deduct(value)

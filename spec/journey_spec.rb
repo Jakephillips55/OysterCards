@@ -1,8 +1,8 @@
 require 'Journey'
 
 describe Journey do
-  let(:station1) { double(:station) }
-  let(:station2) { double(:station) }
+  let(:station1) { double(:station, zone: 1) }
+  let(:station2) { double(:station, zone: 1) }
 
   it "is nil when a new Journey object" do
     expect(subject.entry_station).to eq nil
@@ -37,4 +37,37 @@ describe Journey do
     subject.update_entry_station(station2)
     expect(subject.fare).to eq Journey::PENALTY_CHARGE
   end
+
+
+  context 'given an exit station' do
+    let(:other_station) { double :other_station }
+
+    before do
+      subject.finish(other_station)
+    end
+    it 'calculates a fare for zone 1 to zone 1' do
+      update_zones(1,1)
+      expect(subject.fare).to eq 1
+    end
+    it 'calculates a fare for zone 1 to zone 2' do
+      update_zones(1,2)
+      expect(subject.fare).to eq 2
+    end
+    it 'calculates a fare for zone 6 to zone 5' do
+      update_zones(6,5)
+      expect(subject.fare).to eq 2
+    end
+    it 'calculates a fare for zone 6 to zone 1' do
+      update_zones(6,1)
+      expect(subject.fare).to eq
+    end
+    it 'knows if a Journey if complete' do
+      expect(subject).to be_complete
+    end
+
+    def update_zones(entry_station, exit_zone)
+      allow(station).to receive(:zone).and_return(entry_zone)
+      allow(other_station).to receive(:zone).and_return(exit_zone)
+    end
+end
 end
