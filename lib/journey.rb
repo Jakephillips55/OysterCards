@@ -1,8 +1,8 @@
 class Journey
-attr_reader :entry_station, :exit_station
+attr_reader :entry_station, :exit_station, :fare
 
 MIN_CHARGE = 3
-PENALTY_CHARGE = 6
+PENALTY_CHARGE = 7
 
   def initialize
     @entry_station = nil
